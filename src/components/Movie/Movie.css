@@ -1,0 +1,96 @@
+.movie{
+    display: flex;
+    width: 451px;
+    height: 279px;
+    box-shadow: 0px 0px 12px 0px rgb(218, 218, 218);
+    position: relative;
+}
+
+.movie .movie__column{
+    position: absolute;
+    /* top:10px; */
+    left: 203px;
+    width: 228px;
+    height: 100%;
+}
+
+.title__wrapper{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+.movie .movie__title{
+    margin: 0;
+    font-size: 20px;
+    line-height: 28px;
+    color: #000000;
+    width: 190px;
+}
+
+.movie__circle{
+    width: 30px;
+    height: 30px;
+    border: 2px solid #E90000;
+    border-radius: 50px;
+    position: relative;
+}
+
+.movie__rating{
+    position: absolute;
+    top:5px;
+    left: 5px;
+}
+
+.movie .movie__genres{
+    list-style: none;
+    display:  flex;
+    padding: 0;
+    margin: 5px 0;
+}
+
+.movie__genres li{
+    font-size: 12px;
+    display: inline-block;
+    padding: 5px;
+    margin-right: 8px;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    background-color: #FAFAFA;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.movie .movie__date{
+    margin: 0;
+    font-size: 12px;
+    line-height: 22px;
+    color: #827E7E
+}
+
+.movie .movie__overview{
+    font-size: 12px;
+    line-height: 22px;
+    color: #000000;
+}
+
+.loader{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+}
+
+.movie_stars {
+    position: absolute;
+    width: 239px;
+    min-height: 46px;
+    bottom: 0px; 
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ant-rate-star{
+    font-size: 0.7em; 
+}

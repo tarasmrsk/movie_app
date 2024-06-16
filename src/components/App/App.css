@@ -1,0 +1,25 @@
+body{
+    background-color: #F7F7F7;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.container{
+    max-width: 1010px;
+    margin: 0 auto;
+    background-color: #FFFFFF;
+    padding: 36px;
+    box-sizing: border-box;
+}
+
+.movies{
+    display: grid;
+    grid-template-columns: repeat(2, 451px);
+    gap: 36px;
+    box-sizing: border-box;
+}
+
+.input__wrapper {
+    margin-bottom: 34px;
+}

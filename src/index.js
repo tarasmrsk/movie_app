@@ -1,17 +1,42 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
+import App from './components/App';
+import { Alert } from 'antd';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+class RootComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOnline: true
+    };
+  }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  componentDidMount() {
+    window.addEventListener('online', this.updateOnlineStatus);
+    window.addEventListener('offline', this.updateOnlineStatus);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('online', this.updateOnlineStatus);
+    window.removeEventListener('offline', this.updateOnlineStatus);
+  }
+
+  updateOnlineStatus = () => {
+    this.setState({ isOnline: navigator.onLine });
+  };
+
+  render() {
+    return (
+      <React.StrictMode>
+        {this.state.isOnline ? (
+          <App />
+        ) : (
+          <Alert message="Проверьте подключение к интернету" type="error" />
+        )}
+      </React.StrictMode>
+    );
+  }
+}
+
+createRoot(document.getElementById('root')).render(<RootComponent />);
