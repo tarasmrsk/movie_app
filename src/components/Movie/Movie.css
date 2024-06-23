@@ -6,12 +6,16 @@
     position: relative;
 }
 
+.poster__img{
+    width: 183px;
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .movie .movie__column{
-    position: absolute;
-    /* top:10px; */
-    left: 203px;
-    width: 228px;
-    height: 100%;
+    margin-left: 20px;
+    margin-right: 10px;
 }
 
 .title__wrapper{
@@ -45,8 +49,13 @@
 .movie .movie__genres{
     list-style: none;
     display:  flex;
+    flex-wrap: wrap;
     padding: 0;
     margin: 5px 0;
+}
+
+.movie__genres li{
+    margin-bottom: 5px;
 }
 
 .movie__genres li{
@@ -71,6 +80,7 @@
     font-size: 12px;
     line-height: 22px;
     color: #000000;
+    margin: 0;
 }
 
 .loader{
@@ -82,7 +92,6 @@
 
 .movie_stars {
     position: absolute;
-    width: 239px;
     min-height: 46px;
     bottom: 0px; 
     font-size: 16px;
@@ -92,5 +101,5 @@
 }
 
 .ant-rate-star{
-    font-size: 0.7em; 
+    font-size: 0.8em; 
 }
