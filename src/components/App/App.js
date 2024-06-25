@@ -48,9 +48,9 @@ class App extends React.Component {
     }
   }
 
-  rateMovie = async (movieId, rating) => {
+  rateMovie = async (movieId, ratingId) => {
 
-    if (!movieId || !rating) {
+    if (!movieId || !ratingId) {
       console.error('Необходимо указать movieId и rating')
       return
     }
@@ -66,11 +66,10 @@ class App extends React.Component {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json;charset=utf-8',
-          // 'Content-Type' :'application/json',
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          value: rating,
+          value: ratingId,
         }),
       })
 
@@ -116,6 +115,12 @@ class App extends React.Component {
         ratedMovies: [...ratedMovies],
         error: null
       }))
+
+      // this.setState(prevState => ({
+      //   ratedMovies: [...prevState.ratedMovies, ...ratedMovies],
+      //   error: null
+      // }))
+
     } catch (error) {
       this.setState({ error: error.message })
     }
@@ -126,13 +131,6 @@ class App extends React.Component {
       this.getMovies()
     })
   }
-
-  // handlerSearchQuery = _.debounce((e) => {
-  //   this.setState({ searchQuery: e.target.value }, () => {
-  //     // console.log(this.state.searchQuery);
-  //     this.getMovies()
-  //   })
-  // }, 600)
 
   getMovies = async () => {
     const { urlApi, apiKey, searchQuery, page, guestSessionId } = this.state
@@ -169,6 +167,7 @@ class App extends React.Component {
 
   renderMovies = () => {
     const { movies, noResults, error } = this.state
+    console.log(movies)
 
     if (error) {
       return (
@@ -197,6 +196,7 @@ class App extends React.Component {
               movieGenres={movie.genres}
               movieId={movie.movieId}
               rateMovie={this.rateMovie}
+              voteAverage={movie.vote_average}
             />
           ))}
         </div>
@@ -207,6 +207,7 @@ class App extends React.Component {
 
   renderRatedMovies = () => {
     const { ratedMovies } = this.state
+    console.log(ratedMovies)
     const moviesPerPage = 20
     const pages = Math.ceil(ratedMovies.length / moviesPerPage)
 
@@ -227,10 +228,9 @@ class App extends React.Component {
                 releaseDate={movie.release_date} 
                 overview={movie.overview}
                 movieGenres={movie.genres}
-                rating={movie.rating}
-                // movieId={movie.movieId}
-                // rateMovie={this.rateMovie}
-                // rateMovie={this.rateMovie}
+                movieId={movie.movieId}
+                rateMovie={this.rateMovie}
+                voteAverage={movie.vote_average}
               />
             ) : null
           ))}
