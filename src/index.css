@@ -2,15 +2,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* На весь экран, можно изменить на нужную высоту */
+    height: 100vh;
   }
 
 .ant-space{
   width: 100%;
 }
-
-/* .ant-alert-content{
-  font-size: 24px;
-  font-weight: bold;
-  margin: 100px;
-} */

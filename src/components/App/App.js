@@ -4,7 +4,7 @@ import './App.css';
 import Movie from '../Movie';
 import Search from '../Search';
 import Footer from '../Footer';
-import { Alert, Empty, Tabs } from 'antd';
+import { Alert, Empty, Tabs, Pagination } from 'antd';
 const { TabPane } = Tabs;
 
 class App extends React.Component {
@@ -15,11 +15,16 @@ class App extends React.Component {
     url_api: 'https://api.themoviedb.org/3/search/movie',
     api_key: 'api_key=2a1aa5d98370a138c9bf04a4064f7e6f',
     guest_session: 'https://api.themoviedb.org/3/authentication/guest_session/new',
+    totalPages: 0,
     page: 1,
     noResults: false,
     error: null,
     guestSessionId: null,
   };
+
+  componentDidMount() {
+    this.getGuestSession();
+  }
 
   getGuestSession = async () => {
     const { guest_session, api_key } = this.state;
@@ -29,68 +34,66 @@ class App extends React.Component {
         throw new Error('Ошибка при создании гостевой сессии');
       }
       const data = await response.json();
-      console.log(data.guest_session_id)
       this.setState({ guestSessionId: data.guest_session_id });
+      console.log(`Создание id guest=${this.state.guestSessionId}`);
     } catch (error) {
       this.setState({ error: error.message });
     }
   };
-  
-  componentDidMount() {
-    if (!this.state.guestSessionId) {
-      this.getGuestSession().then(() => {
-        this.getRatedMovies();
-      });
-    } else {
-      this.getRatedMovies();
+
+  rateMovie = async (movieId, rating) => {
+
+     if (!movieId || !rating) {
+      console.error('Необходимо указать movieId и rating');
+      return;
     }
-  }
 
-  // getRatedMovies = async () => {
-  //   const { api_key, guestSessionId } = this.state;
-  //   if (!guestSessionId) {
-  //       return;
-  //   }
-  //   const request = `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?${api_key}&
-  //   language=en-US&page=1&sort_by=created_at.asc`;
+    const { api_key, guestSessionId, ratedMovies } = this.state;
+    const url = `https://api.themoviedb.org/3/movie/${movieId}/rating?${api_key}&guest_session_id=${guestSessionId}`;
+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYTFhYTVkOTgzNzBhMTM4YzliZjA0YTQwNjRmN2U2ZiIsInN1YiI6IjY2NWRjZWJkNmJlOTk3YzA3YmEwZGU0NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hYheqwmAHBAk6HFKShbJJxW4SALwyOYCZ7UN4v-j_jU';
 
-  //   try {
-  //       const response = await fetch(request, {
-  //           method: 'GET',
-  //           headers: {
-  //               accept: 'application/json'
-  //           }
-  //       });
+    console.log(`url=${url}`)
+    console.log(`id movie=${movieId}`)
+    console.log(`api_key=${api_key}`)
+    console.log(`Отправка id guest=${guestSessionId}`)
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=utf-8',
+          // 'Content-Type' :'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          value: rating,
+        }),
+      });
 
-  //       if (!response.ok) {
-  //           throw new Error('Ошибка при загрузке оцененных фильмов');
-  //       }
+      if (!response.ok) {
+        throw new Error('Ошибка при попытке оценить фильм');
+      }
 
-  //       const data = await response.json();
-  //       const ratedMovies = data.results;
-  //       console.log(ratedMovies)
+      console.log('Фильм оценен успешно');
 
-  //       this.setState(prevState => ({
-  //           ratedMovies: [...prevState.ratedMovies, ...ratedMovies],
-  //           error: null
-  //       }));
-  //   } catch (error) {
-  //       this.setState({ error: error.message });
-  //   }
-  // };
+      this.getRatedMovies();
+      
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
+  };
 
   getRatedMovies = async () => {
     const { api_key, guestSessionId } = this.state;
-    if (!guestSessionId) {
-        return;
-    }
 
-    const request = `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?${api_key}&
-  //   language=en-US&page=1&sort_by=created_at.asc`;
+    console.log(`Получение id guest=${guestSessionId}`)
+
+    const url = `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?${api_key}`;
+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYTFhYTVkOTgzNzBhMTM4YzliZjA0YTQwNjRmN2U2ZiIsInN1YiI6IjY2NWRjZWJkNmJlOTk3YzA3YmEwZGU0NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hYheqwmAHBAk6HFKShbJJxW4SALwyOYCZ7UN4v-j_jU';
 
     try {
-        const token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYTFhYTVkOTgzNzBhMTM4YzliZjA0YTQwNjRmN2U2ZiIsInN1YiI6IjY2NWRjZWJkNmJlOTk3YzA3YmEwZGU0NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hYheqwmAHBAk6HFKShbJJxW4SALwyOYCZ7UN4v-j_jU';
-        const response = await fetch(request, {
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -104,10 +107,10 @@ class App extends React.Component {
 
         const data = await response.json();
         const ratedMovies = data.results;
-        console.log(ratedMovies);
 
         this.setState(prevState => ({
-            ratedMovies: [...prevState.ratedMovies, ...ratedMovies],
+            // ratedMovies: [...prevState.ratedMovies, ...ratedMovies],
+            ratedMovies: [...ratedMovies],
             error: null
         }));
     } catch (error) {
@@ -123,7 +126,7 @@ class App extends React.Component {
 
   handlerSearchQuery = _.debounce((e) => {
     this.setState({ searchQuery: e.target.value }, () => {
-      console.log(this.state.searchQuery);
+      // console.log(this.state.searchQuery);
       this.getMovies();
     });
   }, 600);
@@ -137,6 +140,8 @@ class App extends React.Component {
         throw new Error('Ошибка при загрузке данных');
       }
       const data = await response.json();
+      const totalPages = data.total_pages;
+      this.setState({ totalPages });
       if (data.results.length === 0) {
         this.setState({ noResults: true, movies: [], error: null });
       } else {
@@ -161,6 +166,7 @@ class App extends React.Component {
 
   renderMovies = () => {
     const { movies, noResults, error } = this.state;
+    console.log(movies)
 
     if (error) {
       return (
@@ -187,6 +193,8 @@ class App extends React.Component {
                 release_date={movie.release_date} 
                 overview={movie.overview}
                 movieGenres={movie.genres}
+                movieId={movie.movieId}
+                rateMovie={this.rateMovie}
               />
             ))}
           </div>
@@ -197,29 +205,64 @@ class App extends React.Component {
 
   renderRatedMovies = () => {
     const { ratedMovies } = this.state;
+    const moviesPerPage = 20;
+    const pages = Math.ceil(ratedMovies.length / moviesPerPage);
+    console.log(ratedMovies.rating)
 
-    if (ratedMovies.length > 0) {
-        return ratedMovies.map(movie => (
-            <Movie key={movie.id} {...movie} />
-        ));
-    } else {
+    if (!ratedMovies || ratedMovies.length === 0) {
         return <Empty description="Нет оцененных фильмов"/>;
     }
+
+    return (
+        <div>
+            <div className='movies'>
+                {ratedMovies.map(movie => (
+                    movie ? (
+                        <Movie 
+                            key={movie.id}
+                            id={movie.id} 
+                            poster_path={movie.poster_path} 
+                            title={movie.title} 
+                            release_date={movie.release_date} 
+                            overview={movie.overview}
+                            movieGenres={movie.genres}
+                            rating={movie.rating}
+                            // movieId={movie.movieId}
+                            // rateMovie={this.rateMovie}
+                            // rateMovie={this.rateMovie}
+                        />
+                    ) : null
+                ))}
+            </div>
+            <div className="footer__wrapper">
+              <Pagination 
+                current={pages}
+                defaultCurrent={1}
+                showSizeChanger={false}
+                total={pages > 0 ? pages  : 1}
+              />
+            </div>
+        </div>
+    );
   };
 
   render() {
+    
     return (
       <section className='container'>
         <Tabs className='Tabs' defaultActiveKey="1">
           <TabPane tab="Search" key="1">
             <Search handlerSearchQuery={this.handlerSearchQuery} />
             {this.renderMovies()}
+            <Footer 
+              onPageChange={this.handlePageChange}
+              totalPages={this.state.totalPages}
+            />
           </TabPane>
           <TabPane tab="Rated" key="2">
             {this.renderRatedMovies()}
           </TabPane>
         </Tabs>
-        <Footer onPageChange={this.handlePageChange} />
       </section>
     );
   }

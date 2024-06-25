@@ -1,30 +1,32 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Pagination } from 'antd';
 import './Footer.css';
 
-export default class Footer extends Component {
+const Footer = ({ onPageChange, totalPages }) => {
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 10;
 
-    state = {
-        page: 1
-    };
+    console.log(`Максимальное количество страниц: ${totalPages}`);
 
-    handlePageChange = (page) => {
-        this.setState({ page });
-        this.props.onPageChange(page);
-        console.log(`Текущая страница ${page}`);
+    const handlePageChange = (pageNumber) => {
+        setPage(pageNumber);
+        onPageChange(pageNumber);
+        console.log(`Текущая страница ${pageNumber}`);
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    render() {
-        return (
-            <div className="footer__wrapper">
-                <Pagination
-                    defaultCurrent={1} 
-                    total={50} 
-                    onChange={this.handlePageChange}
-                />
-            </div>
-        );
-    }
-}
+    return (
+        <div className="footer__wrapper">
+            <Pagination
+                current={page}
+                defaultCurrent={1}
+                total={totalPages > 0 ? totalPages*itemsPerPage  : 1}
+                showSizeChanger={false}
+                onChange={handlePageChange}
+            />
+        </div>
+    );
+};
+
+export default Footer;

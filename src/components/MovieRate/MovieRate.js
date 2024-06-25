@@ -5,7 +5,6 @@ const MovieRate = ({ onRatingChange }) => {
 
   const handleRatingChange = (rating) => {
     onRatingChange(rating);
-    console.log('Выбранная звезда:', rating);
   };
 
   return (
