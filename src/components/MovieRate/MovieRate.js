@@ -1,15 +1,15 @@
-import React from 'react';
-import { Rate } from 'antd';
+import React from 'react'
+import { Rate } from 'antd'
 
-const MovieRate = ({ onRatingChange }) => {
+function MovieRate({ onRatingChange }) {
 
   const handleRatingChange = (rating) => {
-    onRatingChange(rating);
-  };
+    onRatingChange(rating)
+  }
 
   return (
     <Rate allowHalf defaultValue={0.0} count={10} onChange={handleRatingChange} />
-  );
-};
+  )
+}
 
-export default MovieRate;
+export default MovieRate

@@ -1,10 +1,10 @@
-import React from 'react';
-import { Tabs } from 'antd';
-import './Header.css';
+import React from 'react'
+import { Tabs } from 'antd'
+import './Header.css'
 
 const onChange = (key) => {
-  console.log(key);
-};
+  console.log(key)
+}
 const items = [
   {
     key: '1',
@@ -14,6 +14,8 @@ const items = [
     key: '2',
     label: 'Rated',
   },
-];
-const Header = () => <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
-export default Header;
+]
+function Header() {
+  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+}
+export default Header
