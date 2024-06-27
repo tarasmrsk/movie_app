@@ -51,12 +51,10 @@ class App extends React.Component {
   rateMovie = async (movieId, ratingId) => {
 
     if (!movieId || !ratingId) {
-      console.error('Необходимо указать movieId и rating')
       return
     }
 
     const { apiKey, guestSessionId } = this.state
-    console.log(guestSessionId)
     const url = `https://api.themoviedb.org/3/movie/${movieId}/rating?${apiKey}&guest_session_id=${guestSessionId}`
     const token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYTFhYTVkOTgzNzBhMTM4YzliZjA0YTQwNjRmN2U2ZiIsInN1YiI6IjY2NWRjZWJkNmJlOTk3YzA3YmEwZGU0NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hYheqwmAHBAk6HFKShbJJxW4SALwyOYCZ7UN4v-j_jU'
 
@@ -76,9 +74,6 @@ class App extends React.Component {
       if (!response.ok) {
         throw new Error('Ошибка при попытке оценить фильм')
       }
-
-      console.log('Фильм оценен успешно')
-
       this.getRatedMovies()
       
     } catch (error) {
@@ -88,9 +83,6 @@ class App extends React.Component {
 
   getRatedMovies = async () => {
     const { apiKey, guestSessionId } = this.state
-
-    // console.log(`Получение id guest=${guestSessionId}`)
-
     const url = `https://api.themoviedb.org/3/guest_session/${guestSessionId}/rated/movies?${apiKey}`
     const token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYTFhYTVkOTgzNzBhMTM4YzliZjA0YTQwNjRmN2U2ZiIsInN1YiI6IjY2NWRjZWJkNmJlOTk3YzA3YmEwZGU0NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hYheqwmAHBAk6HFKShbJJxW4SALwyOYCZ7UN4v-j_jU'
 
@@ -111,15 +103,9 @@ class App extends React.Component {
       const ratedMovies = data.results
 
       this.setState(()=> ({
-        // ratedMovies: [...prevState.ratedMovies, ...ratedMovies],
         ratedMovies: [...ratedMovies],
         error: null
       }))
-
-      // this.setState(prevState => ({
-      //   ratedMovies: [...prevState.ratedMovies, ...ratedMovies],
-      //   error: null
-      // }))
 
     } catch (error) {
       this.setState({ error: error.message })
@@ -167,7 +153,6 @@ class App extends React.Component {
 
   renderMovies = () => {
     const { movies, noResults, error } = this.state
-    console.log(movies)
 
     if (error) {
       return (
@@ -207,7 +192,6 @@ class App extends React.Component {
 
   renderRatedMovies = () => {
     const { ratedMovies } = this.state
-    console.log(ratedMovies)
     const moviesPerPage = 20
     const pages = Math.ceil(ratedMovies.length / moviesPerPage)
 
@@ -252,12 +236,11 @@ class App extends React.Component {
     
     return (
       <section className='container'>
-        <Tabs className='Tabs' defaultActiveKey="1">
+        <Tabs className='Tabs' defaultActiveKey="1" destroyInactiveTabPane>
           <TabPane tab="Search" key="1">
             <Search handlerSearchQuery={this.handlerSearchQuery} />
             {this.renderMovies()}
             <Footer 
-            
               onPageChange={this.handlePageChange}
               totalPages={totalPages}
             />

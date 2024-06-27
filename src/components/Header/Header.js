@@ -2,9 +2,6 @@ import React from 'react'
 import { Tabs } from 'antd'
 import './Header.css'
 
-const onChange = (key) => {
-  console.log(key)
-}
 const items = [
   {
     key: '1',
@@ -16,6 +13,6 @@ const items = [
   },
 ]
 function Header() {
-  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+  return <Tabs defaultActiveKey="1" items={items} />
 }
 export default Header
